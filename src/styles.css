@@ -109,7 +109,7 @@ main{
   display: flex;
   
 
-  & input{
+  & input,select{
     border:none;
     border-block-end: 2px solid var(--color-primary);
     flex-grow: 1;
@@ -121,7 +121,9 @@ main{
     color: var(--color-white);
     border-radius: var(--border-raduis);
     padding-inline: 8px;
+    margin-left: 1em;
   }
+
   
 }
 
@@ -167,5 +169,25 @@ li{
     & input[type="checkbox"]:checked{
       accent-color: var(--color-primary);
     }
+}
+
+/*for table version*/
+
+table{
+border-collapse: collapse;
+width: 100%;
+border: solid 1px var(--color-ligth);
+}
+
+th{
+  background-color: var(--color-ligth);
+  color: var(--color-secondary);
+  text-align: left;
+  padding: 1rem;
+}
+td{
+  padding: 1rem;
+  border-block-end: solid 3px var(--color-ligth);
+ 
 }
   
