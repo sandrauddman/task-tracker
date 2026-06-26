@@ -3,6 +3,8 @@
 
 
 interface Task{
+
+id: number;
 taskName: string;
 priority: "low"|"medium"|"high";
 completed: boolean;
@@ -12,20 +14,27 @@ toggle():void;
 
 }
 
-const taskList: Task[]=[];
 
-/******** functions ********/
+type TaskPriority="low"|"medium"|"high"
+
+let taskList: Task[]=[];
+let nextId: number=1;
+
+
+
+
+/******** functions (fix id instead of index)********/ 
 
 const getTaskList= () : Task[]=> taskList;
 
-const getTask =(i : number): Task => taskList[i]!;
+const getTask =(id : number): Task => taskList.filter((task)=>task.id=id)[0]!;
 
-const deleteTask=(i: number): Task[] => taskList.splice(i);
+const deleteTask=(id: number): Task[] => taskList= taskList.filter((task)=>task.id!=id);
 
-const setTask=(task : Task) : number => taskList.push(task);
+function createTask (name: string, prio :"low"|"medium"|"high", desc:string =""):void{
 
-function createTask (name: string, prio : "low"|"medium"|"high", desc:string =""):void{
-  let task: Task={
+  let newTask: Task={
+    id:nextId,
     taskName:name,
     priority: prio,
     completed:false,
@@ -36,17 +45,12 @@ function createTask (name: string, prio : "low"|"medium"|"high", desc:string =""
         
     }
   }
-  setTask(task);
+   taskList.push(newTask);
+   nextId++;
 }
 
-const updateTask=(task : Task, i : number) : void=>{
-
-    deleteTask(i);
-    setTask(task);
-
-}
-const completeTask=(i : number): void=>{
-    const task=taskList[i]!;
+const completeTask=(id : number): void=>{
+    const task=getTask(id);
     task.completed=true;
 }
 
@@ -62,86 +66,53 @@ const countTodo=():number=>{
 
 
 
-/******** Console testdata ********/
+/************ Rendering , eventListners , build DOM ***********/
 
 
-//const task1: Task ={taskName:"Lära mig TS", priority:"low",completed:false, toggle(){ return this.completed=!this.completed;}};
-//const task2: Task ={taskName:"Tvätta", priority:"low",completed:false, toggle(){ return this.completed=!this.completed;}};
-//const task3: Task ={taskName:"Diska", priority:"low",completed:false, toggle(){ return this.completed=!this.completed;}};
-//const task4: Task ={taskName:"Slänga soppor", priority:"low",completed:false, toggle(){ return this.completed=!this.completed;}};
-//const task5: Task ={taskName:"Tömma brevlådan", priority:"low",completed:false, toggle(){ return this.completed=!this.completed;}};
-//const task6: Task ={taskName:"Handla", priority:"low",completed:false,description:"tofu och spenat", toggle(){ return this.completed=!this.completed;} };
-
-
-//const tasks: Task[] =[task1,task2,task3,task4,task5,task6];
-
-
-
-//printHeader();
-//printTodo();
-//printCompleted();
-
-/******** Print console functions ********/
-
-
-/**function printHeader() :void{
-
-
-    console.log(`
-
-       ------------------------ 
-        TASKTRACKER
-       ------------------------
-       
-    `);
-
-}
-
-function printTodo(): void{
-    console.log("Todo:");
-
-    for(const task of tasks){
-        if(!task.completed){
-            console.log(`
-
-        ------------------------ 
-            ${task.taskName}
-        ------------------------
-            Priority: ${task.priority}
-            Completed: ${task.completed}
-
-            `);
-        }
-    }
-
-}
-
-
-function printCompleted():void{
-
-    console.log("Completed:");
-
-    for(const task of tasks){
-        if(task.completed){
-            console.log(`
-
-        ------------------------ 
-            ${task.taskName}
-        ------------------------
-            Priority: ${task.priority}
-            Completed: ${task.completed}
-
-            `);
-        }
-    }
-}**/
-
-
-/************ Render table  and footer***********/
-
+/* get table body*/ 
 const taskrows = document.querySelector("tbody");
 
+/* get footer*/ 
 const footer= document.querySelector("footer");
+
+/* get fields for adding task */
+const taskNameInput= document.querySelector("#taskName") as HTMLInputElement;
+const descriptionInput= document.querySelector("#description") as HTMLInputElement;
+const priorityInput=document.querySelector("#priority")as HTMLSelectElement;
+const addButton= document.querySelector(".addButton") as HTMLButtonElement;
+
+/* get checkbox for toggle complete */
+
+const checkbox= document.getElementById("#taskCheck") as HTMLInputElement;
+
+
+addButton.addEventListener("click", ()=>{
+    addTask();
+   
+})
+
+
+
+
+
+
+
+
+function addTask(){
+
+const taskNm :string= taskNameInput.value.trim();
+const desc : string= descriptionInput.value;
+const prio=priorityInput.value as TaskPriority;
+
+createTask(taskNm,prio,desc);
+renderTasks();
+renderFooter();
+
+taskNameInput.textContent="";
+descriptionInput.textContent="";
+priorityInput.selectedIndex=0;
+
+}
 
 
 
@@ -155,18 +126,33 @@ function renderTasks() : void{
 
     const td1 =document.createElement("td");
     td1.classList.add("task")
-    td1.innerHTML= `<input type="checkbox" name="taskName" id="taskName">
-                            <label for="taskName">${task.taskName}</label>`;
+    td1.innerHTML= `<input type="checkbox" name="taskCheck" id="taskCheck">
+                    <label for="taskcheck">${task.taskName}</label>`;
+
+    
+
     const td2 =document.createElement("td");
     td2.textContent= `${task.description}`;
     
     const td3 =document.createElement("td");
     td3.textContent= `${task.priority}`;
 
+    const deleteBtn= document.createElement("button");
+    deleteBtn.textContent="x";
+    deleteBtn.addEventListener("click", ()=>{
+        deleteTask(task.id);
+        renderTasks();
+        renderFooter();
+    });
+
     const td4 =document.createElement("td");
-    td4.innerHTML= `<button type="submit">x</button>`;
+    td4.append(deleteBtn);
+    
+    
+    
 
 
+    
 
     row.append(td1,td2,td3,td4);
     
@@ -199,10 +185,9 @@ createTask("Maila Mathias","low");
 createTask("Uppdatera kostnadskalkyl","low");
 createTask("simpleko","medium");
 createTask("hey","low","säga hej till nån");
-createTask("Damma","low");
+
 
 
 renderTasks();
-renderFooter();
 
 
