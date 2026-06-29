@@ -16,7 +16,6 @@ toggle():void;
 
 
 type TaskPriority="low"|"medium"|"high"
-
 let taskList: Task[]=[];
 let nextId: number=1;
 
@@ -108,8 +107,8 @@ createTask(taskNm,prio,desc);
 renderTasks();
 renderFooter();
 
-taskNameInput.textContent="";
-descriptionInput.textContent="";
+taskNameInput.value="";
+descriptionInput.value="";
 priorityInput.selectedIndex=0;
 
 }
