@@ -1,60 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="/dist/main.js"></script>
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        rel="stylesheet">
     <title>Task-Tracker</title>
 </head>
+
 <body>
     <header>
         <h1>Task Tracker</h1>
     </header>
     <div class="container">
-    <main>
-        <h2>Your to do</h2>
-        <form action="onClick()" type="submit" class="input-form">
-            <div class="form-group">
-                <input type="text" id="task-input" name="task" placeholder="Add new task...">
-                <button id="addButton">+</button>
-            </div>
-        </form>
-        <div class="tasks-list">
-            <ul>
-                <li>
-                    <div class="task">
-                        <input type="checkbox" id="check" name="task" >
-                        <label for="task">Do the dishes</label>
-                    </div>
-                    <button>x</button>
-                    
-                </li>
-                <li>
-                    <div class="task">
-                        <input type="checkbox" id="check" name="task" >
-                        <label for="task">Do the dishes</label>
-                    </div>
-                    <button>x</button>
-                    
-                </li>
-                <li>
-                    <div class="task">
-                        <input type="checkbox" id="check" name="task" >
-                        <label for="task">Do the dishes</label>
-                    </div>
-                    <button>x</button>
-                    
-                </li>
-            </ul>
+        <main>
+            <h2>Your to do</h2>
+            <form class="form-group">
 
-        </div>
+                <label for="taskName" class="sr-only">Add name of task</label>
+                <input type="text" id="taskName" name="taskName" placeholder="Add new task" >
+                
+                <label for="description" class="sr-only">Describe task</label>
+                <input type="text" id="description" name="description" placeholder="Description">
+                
+                <label for="priority" class="sr-only">priority</label>
+                <select name="priority" id="priority" required>
+                    <option value="empty" disabled  selected>Priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+                
+                <button type="submit" class="addButton">+</button>
+            </form>
+            <p class="error"></p>
+            <section class="tasks-list">
+                <div class="card">
+                    <div class="task-content">
+                        <div class="task">
+                            <input type="checkbox" id="taskCheck" name="taskCheck">
+                            <label for="taskCheck"> Do the dishes</label>
+                        </div>
+                        <div class="task-content2">
+                            <p>Priority : High</p>
+                            <button>x</button>
+                        </div>
+                    </div>
+                    <p class="description">just do the damn thing</p>
+                </div>
+                 <div class="card">
+                    <div class="task-content">
+                        <div class="task">
+                            <input type="checkbox" id="taskCheck" name="taskCheck">
+                            <label for="taskCheck"> Do the dishes</label>
+                        </div>
+                        <div class="task-content2">
+                            <p>Priority : High</p>
+                            <button>x</button>
+                        </div>
+                    </div>
+                    <p class="description"></p>
+                </div>
+
+                <ul>
+                    <li>
+                        <div class="task">
+                            <input type="checkbox" id="check" name="task">
+                            <label for="task">Do the dishes</label>
+                        </div>
+                        <button>x</button>
+
+                    </li>
+                    <li>
+                        <div class="task">
+                            <input type="checkbox" id="check" name="task">
+                            <label for="task">Do the dishes</label>
+                        </div>
+                        <button>x</button>
+
+                    </li>
+                    <li>
+                        <div class="task">
+                            <input type="checkbox" id="check" name="task">
+                            <label for="task">Do the dishes</label>
+                        </div>
+                        <button>x</button>
+
+                    </li>
+                </ul>
+
+            </section>
+        </main>
         <footer>
-            <p>Your remaning todos: #</p>
-            <p class="quote"> Lorem ipsum qui sit et dolor</p>
+            
         </footer>
-    </main>
+
     </div>
 </body>
+
 </html>
