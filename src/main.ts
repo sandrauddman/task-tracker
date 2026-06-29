@@ -1,12 +1,11 @@
 
 /******** Variables and interfaces ********/
 
-
 interface Task{
 
 id: number;
 taskName: string;
-priority: "low"|"medium"|"high";
+priority: "Low"|"Medium"|"High";
 completed: boolean;
 description? : string;
 
@@ -15,14 +14,14 @@ toggle():void;
 }
 
 
-type TaskPriority="low"|"medium"|"high"
+type TaskPriority="Low"|"Medium"|"High"
 let taskList: Task[]=[];
 let nextId: number=1;
 
 
 
 
-/******** functions (fix id instead of index)********/ 
+/******** functions ********/ 
 
 const getTaskList= () : Task[]=> taskList;
 
@@ -30,7 +29,7 @@ const getTask =(id : number): Task => taskList.filter((task)=>task.id=id)[0]!;
 
 const deleteTask=(id: number): Task[] => taskList= taskList.filter((task)=>task.id!=id);
 
-function createTask (name: string, prio :"low"|"medium"|"high", desc:string =""):void{
+function createTask (name: string, prio :"Low"|"Medium"|"High", desc:string =""):void{
 
   let newTask: Task={
     id:nextId,
@@ -40,6 +39,7 @@ function createTask (name: string, prio :"low"|"medium"|"high", desc:string ="")
     description: desc,
 
     toggle() {
+        console.log(this.completed);
         return this.completed=!this.completed;
         
     }
@@ -64,7 +64,6 @@ const countTodo=():number=>{
 
 
 
-
 /************ Rendering , eventListners , build DOM ***********/
 
 
@@ -78,18 +77,14 @@ const footer= document.querySelector("footer");
 const taskNameInput= document.querySelector("#taskName") as HTMLInputElement;
 const descriptionInput= document.querySelector("#description") as HTMLInputElement;
 const priorityInput=document.querySelector("#priority")as HTMLSelectElement;
-const addButton= document.querySelector(".addButton") as HTMLButtonElement;
-
-/* get checkbox for toggle complete */
-
-const checkbox= document.getElementById("#taskCheck") as HTMLInputElement;
+const errorInput=document.querySelector(".error") as HTMLParagraphElement;
+//const addButton= document.querySelector(".addButton") as HTMLButtonElement;
+const form =document.querySelector(".form-group") as HTMLFormElement;
 
 
-addButton.addEventListener("click", ()=>{
-    addTask();
-   
-})
 
+//addButton.addEventListener("click", addTask);
+form.addEventListener("submit",handleSubmit);
 
 
 
@@ -103,13 +98,63 @@ const taskNm :string= taskNameInput.value.trim();
 const desc : string= descriptionInput.value;
 const prio=priorityInput.value as TaskPriority;
 
+const error=validateEntry(taskNm, desc);
+
+    if (error !== ""){
+        errorInput.textContent=error;
+        return;
+    }
+
 createTask(taskNm,prio,desc);
 renderTasks();
 renderFooter();
 
-taskNameInput.value="";
-descriptionInput.value="";
-priorityInput.selectedIndex=0;
+clearEntry();
+
+}
+
+
+function handleSubmit(event: SubmitEvent): void {
+    event.preventDefault();
+
+    const taskNm :string= taskNameInput.value.trim();
+    const desc : string= descriptionInput.value;
+    const prio=priorityInput.value as TaskPriority;
+
+    const error=validateEntry(taskNm, desc);
+
+    if (error !== ""){
+        errorInput.textContent=error;
+        return;
+    }
+
+
+
+    createTask(taskNm,prio,desc);
+    renderTasks();
+    renderFooter();
+
+    clearEntry();
+
+}
+
+function validateEntry(name: string, description:string): string{
+
+    if(name === "") return "Task can't be empty";
+    if(name.length < 3) return "Task must have a minmum of 3 ch";
+    if(name.length > 40) return "Task name can only contain max 40 ch";
+    if(description.length > 40) return "Task description cannot be more than 40 ch";
+    for(const task of taskList){
+        if(task.taskName.toLowerCase()===name.toLowerCase()) return "Task arlready exists!"
+    }
+    return "";
+
+}
+
+function clearEntry (): void {
+    taskNameInput.value="";
+    descriptionInput.value="";
+    priorityInput.selectedIndex=0;
 
 }
 
@@ -124,11 +169,33 @@ function renderTasks() : void{
     const row =document.createElement("tr");
 
     const td1 =document.createElement("td");
-    td1.classList.add("task")
-    td1.innerHTML= `<input type="checkbox" name="taskCheck" id="taskCheck">
-                    <label for="taskcheck">${task.taskName}</label>`;
+    td1.classList.add("task");
+
+    if(task.priority ==="High"){
+        td1.classList.add("high-priority");
+    }
 
     
+
+    const checkboxInput= document.createElement("input");
+    checkboxInput.id="taskCheck";
+    checkboxInput.name="taskCheck";
+    checkboxInput.type="checkbox";
+    if(task.completed) checkboxInput.checked=true;
+    
+    const label = document.createElement("label");
+    label.htmlFor="taskCheck";
+    label.textContent=`${task.taskName}`
+    td1.append(checkboxInput,label);
+   
+
+                  
+    checkboxInput.addEventListener("change", ()=>{
+       task.toggle();
+       renderFooter();
+    });
+
+ 
 
     const td2 =document.createElement("td");
     td2.textContent= `${task.description}`;
@@ -146,13 +213,7 @@ function renderTasks() : void{
 
     const td4 =document.createElement("td");
     td4.append(deleteBtn);
-    
-    
-    
-
-
-    
-
+ 
     row.append(td1,td2,td3,td4);
     
     taskrows?.append(row)
@@ -180,13 +241,14 @@ function renderFooter(): void{
 }
 
 
-createTask("Maila Mathias","low");
-createTask("Uppdatera kostnadskalkyl","low");
-createTask("simpleko","medium");
-createTask("hey","low","säga hej till nån");
+createTask("Maila Mathias","Low");
+createTask("Uppdatera kostnadskalkyl","Low");
+createTask("simpleko","Medium");
+createTask("hey","High","säga hej till nån");
 
 
 
 renderTasks();
+renderFooter();
 
 

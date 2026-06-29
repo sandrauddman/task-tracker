@@ -15,17 +15,25 @@
     <div class="container">
     <main>
         <h2>Your to do</h2>
-            <div class="form-group">
-                <input type="text" id="taskName" name="taskName" placeholder="Add new task" required>
+            <form class="form-group">
+
+                <label for="taskName" class="sr-only">Add name of task</label>
+                <input type="text" id="taskName" name="taskName" placeholder="Add new task" >
+                
+                <label for="description" class="sr-only">Describe task</label>
                 <input type="text" id="description" name="description" placeholder="Description">
+                
+                <label for="priority" class="sr-only">priority</label>
                 <select name="priority" id="priority" required>
                     <option value="empty" disabled  selected>Priority</option>
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                 </select>
-                <button class="addButton">+</button>
-            </div>
+                
+                <button type="submit" class="addButton">+</button>
+            </form>
+            <p class="error"></p>
         <div class="tasks-list">
             <table>
                 <thead>
