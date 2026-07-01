@@ -113,6 +113,19 @@ clearEntry();
 
 }
 
+function saveTasks() :void {
+    const json = JSON.stringify(taskList);
+    localStorage.setItem("tasks",json);
+}
+
+function loadTasks() :void {
+    const json= localStorage.getItem("tasks");
+    if(json ===null){
+        return;
+    }
+    taskList = JSON.parse(json); 
+}
+
 
 function handleSubmit(event: SubmitEvent): void {
     event.preventDefault();
